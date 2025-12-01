@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hızlı Deneme Paneli Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --success-color: #2ec4b6;
+            --warning-color: #ff9f1c;
+            --danger-color: #e71d36;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #2b2d42;
+        }
+
+        body {
+            margin: 0;
+            background-color: var(--bg-color);
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Yasal Uyarı */
+        .legal-notice {
+            background-color: #fff0f0;
+            color: #c0392b;
+            border-left: 5px solid #c0392b;
+            padding: 15px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            max-width: 1000px;
+            width: 100%;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        /* Ana Konteyner */
+        .main-container {
+            background: var(--card-bg);
+            width: 100%;
+            max-width: 1000px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Sekmeler (Tabs) */
+        .tabs-header {
+            display: flex;
+            background: #f1f2f6;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 20px;
+            border: none;
+            background: transparent;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 1rem;
+            color: #7f8c8d;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .tab-btn:hover {
+            background: #e6e8ed;
+            color: var(--primary-color);
+        }
+
+        .tab-btn.active {
+            background: var(--card-bg);
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--primary-color);
+        }
+
+        /* Sekme İçerikleri */
+        .tab-content {
+            display: none;
+            padding: 30px;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Form Grupları */
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        input, select {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border 0.3s ease;
+            font-family: inherit;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
+        }
+
+        /* Butonlar */
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: white;
+            flex: 1;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary { background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); }
+        .btn-warning { background: linear-gradient(135deg, var(--warning-color), #f77f00); color: #fff; }
+        .btn-success { background: linear-gradient(135deg, var(--success-color), #20bf6b); }
+        .btn-danger { background: linear-gradient(135deg, var(--danger-color), #c0392b); }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Sonuç Alanları */
+        .result-box {
+            margin-top: 30px;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+        
+        .section-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Liste Stilleri (Kurum Bulucu) */
+        .school-list {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #eee;
+            border-radius: 8px;
+        }
+        .school-item {
+            padding: 12px 15px;
+            border-bottom: 1px solid #f1f1f1;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .school-item:last-child { border-bottom: none; }
+        .school-item:hover { background-color: #f8f9fa; }
+        .school-badge {
+            background: #eef2ff;
+            color: var(--primary-color);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        /* PDF Detayları */
+        details {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+        summary {
+            padding: 15px;
+            background: #f8f9fa;
+            cursor: pointer;
+            font-weight: 600;
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        details[open] summary {
+            border-bottom: 1px solid #e0e0e0;
+            background: #fff;
+            color: var(--primary-color);
+        }
+        summary::-webkit-details-marker { display: none; }
+        
+        .pdf-content {
+            padding: 15px;
+            text-align: center;
+        }
+
+        .pdf-content canvas {
+            width: 100%;
+            height: auto;
+            display: block;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        /* Durum Mesajı */
+        #status {
+            margin-top: 15px;
+            font-weight: 500;
+            color: #555;
+            text-align: center;
+            min-height: 20px;
+        }
+        
+        /* Spinner */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        .spinner-dark {
+             border-top-color: #4361ee;
+             border-color: rgba(67, 97, 238, 0.3);
+        }
+        
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+    </style>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js"></script>
+</head>
+
+<body>
+
+    <div class="legal-notice">
+        <i class="fas fa-exclamation-triangle"></i> <strong>YASAL UYARI:</strong> 
+        Bu araç, kullanıcının kişisel talebi üzerine eğitim amaçlı oluşturulmuştur. Veriler <a href="https://www.hizlideneme.com" target="_blank">hizlideneme.com</a> üzerinden çekilmektedir. 
+        Tüm telif hakları ve yasal sorumluluk ilgili kurum ve kullanıcılara aittir.
+    </div>
+
+    <div class="main-container">
+        <div class="tabs-header">
+            <button class="tab-btn active" onclick="openTab('tab-karne')">
+                <i class="fas fa-file-alt"></i> Karne Görüntüle
+            </button>
+            <button class="tab-btn" onclick="openTab('tab-kurum')">
+                <i class="fas fa-search-location"></i> Kurum Kodu Bulucu
+            </button>
+        </div>
+
+        <div id="tab-karne" class="tab-content active">
+            <div class="input-grid">
+                <div class="form-group">
+                    <label>Deneme ID</label>
+                    <input type="number" id="denemeID" placeholder="Örn: 747" value="747" required>
+                </div>
+                <div class="form-group">
+                    <label>Kurum Kodu</label>
+                    <input type="number" id="kurumKodu" placeholder="Örn: 745343" required>
+                </div>
+                <div class="form-group">
+                    <label>Öğrenci No (Tekli Arama)</label>
+                    <input type="number" id="ogrenciNo" placeholder="Örn: 188">
+                </div>
+                <div class="form-group">
+                    <label>Hız Limiti (Paralel İstek)</label>
+                    <input type="number" id="parallelLimit" value="5" min="1" max="20">
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn-primary" id="btnGoster" onclick="karneGetir()">
+                    <i class="fas fa-eye"></i> Tekli Göster
+                </button>
+                <button class="btn-warning" id="btnOtoAra" onclick="otomatikAramaToggle('start')">
+                    <i class="fas fa-robot"></i> Otomatik Tara (1-10000)
+                </button>
+                 <button class="btn-danger" id="btnDurdur" onclick="otomatikAramaToggle('stop')" style="display:none;">
+                    <i class="fas fa-pause-circle"></i> Durdur
+                </button>
+            </div>
+            
+            <div id="status"></div>
+
+            <div id="pdfContainer" class="result-box" style="display:none;">
+                <h3 class="section-title"><i class="fas fa-check-circle"></i> Bulunan Öğrenci Karneleri</h3>
+            </div>
+            
+            <div id="errorContainer" class="result-box" style="display:none; color: var(--danger-color);">
+                <h3 class="section-title" style="color:var(--danger-color)"><i class="fas fa-times-circle"></i> Bulunamayanlar</h3>
+            </div>
+        </div>
+
+        <div id="tab-kurum" class="tab-content">
+            <div class="input-grid" style="grid-template-columns: 1fr auto;">
+                <div class="form-group">
+                    <label>İl Plaka Kodu</label>
+                    <input type="number" id="ilKoduBulucu" placeholder="Örn: 20 (Denizli)" min="1" max="81">
+                </div>
+                <div class="form-group" style="justify-content: flex-end;">
+                    <button class="btn-success" id="btnBul" onclick="getIlceleriGetir()">
+                        <i class="fas fa-map-marked-alt"></i> İlçeleri Getir
+                    </button>
+                </div>
+            </div>
+            
+            <div id="bulucuAdim1" style="display:none; margin-top: 20px;">
+                <div class="form-group">
+                    <label>İlçe Seçiniz</label>
+                    <select id="ilceSecimDropdown" onchange="getKurumlarByIlce()">
+                        <option value="">Seçiniz...</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div id="bulucuAdim2" style="display:none; margin-top: 20px;">
+                <div class="form-group">
+                    <label>Okul Ara (Filtrele)</label>
+                    <input type="text" id="kurumAraInput" placeholder="Okul adı yazın..." onkeyup="filtreleKurumlar()">
+                </div>
+                <p id="kurumSayisi" style="font-size: 0.9rem; color: #666; margin-top: 10px;"></p>
+                
+                <div id="kurumListesi" class="school-list">
+                </div>
+            </div>
+            
+            <p id="bulucuMesaj" style="text-align:center; color:#888; margin-top:30px;">
+                <i class="fas fa-info-circle"></i> Kurum kodu bulmak için önce İl Plaka kodunu giriniz.
+            </p>
+        </div>
+
+    </div>
+
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+        const BASE_URL = 'https://www.hizlideneme.com'; 
+        const ILCE_API = BASE_URL + '/ogrenci_giris/ilce_getir';
+        const KURUM_API = BASE_URL + '/ogrenci_giris/kurum_getir';
+        let tumKurumlar = [];
+        
+        // --- OTOMATİK TARAMA GLOBAL DEĞİŞKENLERİ (YENİ) ---
+        let isScanning = false;
+        let currentStudentNo = 1;
+        const maxStudentNo = 10000;
+        let foundCount = 0;
+
+        // --- TAB YÖNETİMİ ---
+        function openTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            // Tıklanan butonu aktif yap
+            // Event objesi fonksiyon çağrılmazsa tanımsız olabilir, bu yüzden butona tıklama garantilenir.
+            const targetButton = document.querySelector(`.tab-btn[onclick*="${tabName}"]`);
+            if (targetButton) {
+                targetButton.classList.add('active');
+            }
+        }
+
+        /* *** VERİ AYRIŞTIRMA VE TEMİZLEME *** */
+        function parseNameAndClass(text, oNo) {
+            // Öğrenci Adı Soyadı Ayrıştırma
+            const NAME_REGEX_STRICT = /(?:Adı Soyadı:|Öğrenci Adı:)\s*([A-ZÇĞİÖŞÜ\s]{2,})|([A-ZÇĞİÖŞÜ\s]{4,})\s+\d+\/[A-ZÇĞİÖŞÜ\s]{1,3}/gi; 
+            let name = 'Bilinmiyor';
+            const textUpper = text.toUpperCase();
+
+            // Sınıf Bilgisini Ayrıştırma
+            const CLASS_REGEX = /(?:Sınıfı:|Sınıf:)\s*([^\s]+)|(\d+\/[A-ZÇĞİÖŞÜ\s]{1,3}\s*(?:-\s*\d{1,3})?)/i;
+            let classMatch = text.match(CLASS_REGEX);
+            let className = classMatch ? (classMatch[1] || classMatch[2] || 'Bilinmiyor').trim() : 'Bilinmiyor';
+
+            // Sınıf Adı Temizleme: Örneğin "8/E -- Sayısal" -> "8/E"
+            if (className.includes('-')) {
+                className = className.split('-')[0].trim();
+            }
+            // Boşlukları temizle ve BÜYÜK HARF yap
+            className = className.replace(/\s+/g, '').toUpperCase();
+            
+            // İsim Ayrıştırma
+            const matches = [...text.matchAll(NAME_REGEX_STRICT)];
+            for (const match of matches) {
+                let potentialName = match[1] || match[2]; 
+                if (potentialName) {
+                    potentialName = potentialName.trim().replace(/\s+/g, ' ').replace(/[|]/g, '');
+                    if (potentialName.length < 5 || /^\d+$/.test(potentialName)) continue;
+                    const excludedWords = ["BELGESİ", "OKULU", "ORTAOKULU", "SINAV", "SONUÇ", "GELİŞİM", "DEĞERLENDİRME", "DENİZLİ", "ACIPAYAM"];
+                    if (excludedWords.some(word => potentialName.toUpperCase().includes(word))) continue;
+                    
+                    // Baş harfleri büyük yapma
+                    name = potentialName.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+                    break;
+                }
+            }
+            // Öğrenci numarasını isimden çıkar (eğer hatalı parse edildiyse)
+            if (name.includes(oNo)) name = name.replace(oNo, '').trim();
+            
+            return { name: name, className: className };
+        }
+
+        async function extractTextFromPdf(pdfBuffer) {
+            try {
+                const pdf = await pdfjsLib.getDocument({ data: pdfBuffer }).promise;
+                const page = await pdf.getPage(1); 
+                const textContent = await page.getTextContent(); 
+                // Metni birleştir ve birden fazla boşluğu teke indir
+                return textContent.items.map(s => s.str).join(" ").replace(/\s+/g, ' ') + " "; 
+            } catch (error) { 
+                console.error("Metin çıkarma hatası:", error);
+                return null; 
+            }
+        }
+
+        async function renderPDFToElement(pdfBuffer, targetElement) {
+            targetElement.innerHTML = '<span class="spinner spinner-dark"></span> PDF Yükleniyor...';
+            try {
+                const pdf = await pdfjsLib.getDocument({ data: pdfBuffer }).promise;
+                targetElement.innerHTML = ''; // Yükleme spinner'ını temizle
+                for (let i = 1; i <= pdf.numPages; i++) {
+                    const page = await pdf.getPage(i);
+                    // Daha küçük cihazlar için ölçeği biraz düşürebiliriz.
+                    const scale = 1.2; 
+                    const viewport = page.getViewport({ scale: scale });
+                    
+                    const canvas = document.createElement("canvas");
+                    const ctx = canvas.getContext("2d");
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+                    
+                    targetElement.appendChild(canvas);
+                    
+                    // PDF'i canvas'a çiz
+                    const renderContext = { canvasContext: ctx, viewport: viewport };
+                    await page.render(renderContext).promise;
+                }
+            } catch (err) { 
+                targetElement.innerHTML = `<p style="color:var(--danger-color);">PDF Görüntüleme Hatası.</p>`;
+                console.error("PDF Render Hatası:", err); 
+            }
+        }
+
+        function renderSingleStudent(student) {
+            const container = document.getElementById("pdfContainer");
+            // Sınıf adını CSS ID'si için güvenli hale getir
+            const classId = `class-${student.className.replace(/[^a-zA-Z0-9]/g, '-')}`; 
+            
+            let classSection = document.getElementById(classId);
+            if (!classSection) {
+                // Yeni sınıf bölümü oluştur
+                classSection = document.createElement('details');
+                classSection.id = classId;
+                classSection.open = true; // Varsayılan olarak açık gelsin
+                
+                const summary = document.createElement('summary');
+                summary.innerHTML = `<span><i class="fas fa-users"></i> ${student.className}</span> <span style="font-size:0.8em; color:#666;">(Öğrenci Sayısı: <span class="student-count">1</span>)</span>`; 
+                classSection.appendChild(summary);
+                
+                const listDiv = document.createElement('div');
+                listDiv.className = 'class-list';
+                classSection.appendChild(listDiv);
+                
+                // Sınıfı alfabetik/nümerik sıraya göre ekle
+                insertSortedClass(classSection, container);
+            } else {
+                 // Öğrenci sayısını güncelle
+                 const countSpan = classSection.querySelector('.student-count');
+                 countSpan.textContent = parseInt(countSpan.textContent) + 1;
+            }
+
+            // Öğrenci detaylarını oluştur
+            const studentDetails = document.createElement('details');
+            // Öğrenci No'yu sıralama için veri özniteliğine ekle
+            studentDetails.dataset.studentNo = student.studentNo; 
+            
+            const summary = document.createElement('summary');
+            summary.innerHTML = `<span><i class="fas fa-user-graduate"></i> ${student.name || 'Adı Bilinmiyor'}</span> <span class="school-badge">No: ${student.studentNo}</span>`;
+            
+            const content = document.createElement('div');
+            content.className = 'pdf-content';
+
+            // Toggle (açma/kapama) olayını dinle
+            studentDetails.addEventListener('toggle', function() {
+                // Eğer açıldıysa ve içerik boşsa PDF'i yükle
+                if (this.open && content.children.length === 0) {
+                    // Buffer'ı kopyalayarak kullan, aksi takdirde aynı buffer paralel render işlemlerinde sorun çıkarabilir.
+                    renderPDFToElement(student.pdfBuffer.slice(0), content); 
+                }
+            });
+
+            studentDetails.appendChild(summary);
+            studentDetails.appendChild(content);
+            
+            // Öğrenciyi numara sırasına göre sınıfa ekle
+            insertSortedStudent(studentDetails, classSection.querySelector('.class-list'));
+        }
+
+        // --- SIRALAMA FONKSİYONLARI ---
+        function insertSortedClass(newClass, container) {
+            const newName = newClass.id; 
+            let inserted = false;
+            // pdfContainer altındaki tüm "details" elemanlarını al (sınıf bölümleri)
+            const existing = Array.from(container.children).filter(el => el.tagName === 'DETAILS');
+            for (const el of existing) {
+                // Türkçe nümerik sıralama kullanarak karşılaştır
+                if (newName.localeCompare(el.id, 'tr', {numeric:true}) < 0) {
+                    container.insertBefore(newClass, el);
+                    inserted = true;
+                    break;
+                }
+            }
+            if (!inserted) container.appendChild(newClass);
+        }
+
+        function insertSortedStudent(newStudent, container) {
+            const newNo = parseInt(newStudent.dataset.studentNo);
+            let inserted = false;
+            // Sınıf listesi altındaki tüm "details" elemanlarını al (öğrenci detayları)
+            const existing = Array.from(container.children).filter(el => el.tagName === 'DETAILS');
+            for (const el of existing) {
+                // Öğrenci No'ya göre nümerik karşılaştırma
+                if (newNo < parseInt(el.dataset.studentNo)) {
+                    container.insertBefore(newStudent, el);
+                    inserted = true;
+                    break;
+                }
+            }
+            if (!inserted) container.appendChild(newStudent);
+        }
+
+
+        // --- KURUM BULUCU ---
+        async function getIlceleriGetir() {
+            const ilNo = document.getElementById("ilKoduBulucu").value;
+            const btn = document.getElementById("btnBul");
+            if (!ilNo) return alert("İl kodu giriniz.");
+            
+            btn.innerHTML = '<span class="spinner"></span> Yükleniyor...';
+            btn.disabled = true;
+
+            try {
+                const res = await fetch(ILCE_API, { 
+                    method: 'POST', 
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}, 
+                    body: `il_no=${ilNo}` 
+                });
+                const data = await res.json();
+                
+                const dropdown = document.getElementById("ilceSecimDropdown");
+                dropdown.innerHTML = '<option value="">Seçiniz...</option>';
+                
+                if (data.length === 0) throw new Error("İlçe bulunamadı. Kodu kontrol edin.");
+                
+                data.forEach(ilce => {
+                    const opt = document.createElement('option');
+                    opt.value = ilce.id;
+                    opt.textContent = ilce.ilce_adi;
+                    dropdown.appendChild(opt);
+                });
+
+                document.getElementById("bulucuAdim1").style.display = 'block';
+                document.getElementById("bulucuAdim2").style.display = 'none'; // Yeni aramada kurum listesini gizle
+                document.getElementById("bulucuMesaj").style.display = 'none';
+
+            } catch (e) { 
+                alert("Hata: " + e.message); 
+                document.getElementById("bulucuAdim1").style.display = 'none';
+                document.getElementById("bulucuMesaj").style.display = 'block';
+            }
+            finally { 
+                btn.innerHTML = '<i class="fas fa-map-marked-alt"></i> İlçeleri Getir';
+                btn.disabled = false;
+            }
+        }
+
+        async function getKurumlarByIlce() {
+            const ilceId = document.getElementById("ilceSecimDropdown").value;
+            if(!ilceId) return;
+
+            document.getElementById("kurumListesi").innerHTML = '<div style="text-align:center; padding:20px;"><span class="spinner spinner-dark"></span> Kurumlar Yükleniyor...</div>';
+            
+            try {
+                const res = await fetch(KURUM_API, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                    body: `ilce_id=${ilceId}`
+                });
+                tumKurumlar = await res.json();
+                
+                if (tumKurumlar.length === 0) {
+                    document.getElementById("kurumListesi").innerHTML = '<p style="text-align:center; color:var(--danger-color); padding:20px;">Bu ilçede kurum bulunamadı.</p>';
+                    document.getElementById("kurumSayisi").textContent = `0 Kurum Bulundu`;
+                } else {
+                    renderKurumListesi(tumKurumlar);
+                }
+                document.getElementById("bulucuAdim2").style.display = 'block';
+            } catch (e) { 
+                alert("Kurum listesi yüklenirken hata oluştu."); 
+                document.getElementById("kurumListesi").innerHTML = '';
+                document.getElementById("kurumSayisi").textContent = `0 Kurum Bulundu`;
+            }
+        }
+
+        function renderKurumListesi(list) {
+            const container = document.getElementById("kurumListesi");
+            container.innerHTML = '';
+            document.getElementById("kurumSayisi").textContent = `${list.length} Kurum Bulundu`;
+
+            list.forEach(k => {
+                const div = document.createElement('div');
+                div.className = 'school-item';
+                div.innerHTML = `<span>${k.kurum_adi}</span> <span class="school-badge">${k.kurum_no}</span>`;
+                div.onclick = () => {
+                    document.getElementById('kurumKodu').value = k.kurum_no;
+                    // Aktif sekme butonuna tıklayarak geçişi tetikle
+                    openTab('tab-karne');
+                    alert("Kurum kodu kopyalandı ve Karne sekmesine aktarıldı!");
+                };
+                container.appendChild(div);
+            });
+        }
+
+        function filtreleKurumlar() {
+            const val = document.getElementById("kurumAraInput").value.toUpperCase();
+            const filtered = tumKurumlar.filter(k => k.kurum_adi.toUpperCase().includes(val));
+            renderKurumListesi(filtered);
+        }
+
+        // --- KARNE İŞLEMLERİ (TEKLİ) ---
+        async function karneGetir() {
+            const dID = document.getElementById("denemeID").value;
+            const kKodu = document.getElementById("kurumKodu").value;
+            const oNo = document.getElementById("ogrenciNo").value;
+            const status = document.getElementById("status");
+            const container = document.getElementById("pdfContainer");
+
+            if (!dID || !kKodu || !oNo) return alert("Deneme ID, Kurum Kodu ve Öğrenci No'yu doldurun.");
+
+            container.style.display = 'block';
+            // Tekli aramada önceki sonuçları temizle
+            container.innerHTML = '<h3 class="section-title"><i class="fas fa-check-circle"></i> Bulunan Öğrenci Karneleri</h3>';
+            status.innerHTML = '<span class="spinner spinner-dark"></span> Öğrenci ' + oNo + ' için işleniyor...';
+
+            const url = `${BASE_URL}/ogrenci_giris/karne_pdf/${dID}/${oNo}/${kKodu}`;
+            
+            try {
+                const res = await fetch(url);
+                if(!res.ok) throw new Error("Bulunamadı");
+                
+                const buffer = await res.arrayBuffer();
+                const text = await extractTextFromPdf(buffer);
+                
+                if (!text) throw new Error("PDF metni çıkarılamadı.");
+
+                const info = parseNameAndClass(text, oNo);
+                
+                renderSingleStudent({ ...info, studentNo: oNo, pdfBuffer: buffer });
+                status.innerHTML = `<i class="fas fa-check" style="color:var(--success-color);"></i> Öğrenci ${oNo} (${info.name}) bulundu ve eklendi.`;
+            } catch(e) {
+                status.innerHTML = `<i class="fas fa-times" style="color:var(--danger-color);"></i> Öğrenci ${oNo} bulunamadı.`;
+                console.error("Tekli Arama Hatası:", e);
+                alert(`Öğrenci ${oNo} için PDF Bulunamadı veya okunamadı!`);
+            }
+        }
+
+
+        // --- OTOMATİK TARAMA (YENİLENMİŞ) ---
+        function otomatikAramaToggle(action) {
+            const btnBaslat = document.getElementById("btnOtoAra");
+            const btnDurdur = document.getElementById("btnDurdur");
+            const status = document.getElementById("status");
+            
+            if (action === 'start' && !isScanning) {
+                const dID = document.getElementById("denemeID").value;
+                const kKodu = document.getElementById("kurumKodu").value;
+                if (!dID || !kKodu) return alert("Deneme ID ve Kurum Kodu gerekli.");
+
+                isScanning = true;
+                btnBaslat.style.display = 'none';
+                btnDurdur.style.display = 'flex';
+                
+                document.getElementById("pdfContainer").style.display = 'block';
+                
+                // Tarama yeni başlıyorsa veya sonlandıysa sıfırla
+                if (currentStudentNo === 1 || currentStudentNo > maxStudentNo) {
+                    currentStudentNo = 1; 
+                    foundCount = 0;
+                    document.getElementById("pdfContainer").innerHTML = '<h3 class="section-title"><i class="fas fa-check-circle"></i> Bulunan Öğrenci Karneleri</h3>';
+                }
+
+                otomatikAramaRunner();
+
+            } else if (action === 'stop' && isScanning) {
+                isScanning = false;
+                btnBaslat.style.display = 'flex';
+                btnDurdur.style.display = 'none';
+                status.innerHTML = `<i class="fas fa-pause-circle" style="color:var(--warning-color);"></i> Durduruldu. **${currentStudentNo - 1}** numarada bekleniyor (Bulunan: **${foundCount}**).`;
+            }
+        }
+
+
+        async function otomatikAramaRunner() {
+            const dID = document.getElementById("denemeID").value;
+            const kKodu = document.getElementById("kurumKodu").value;
+            const limit = parseInt(document.getElementById("parallelLimit").value);
+            const status = document.getElementById("status");
+            let active = 0;
+            
+            const next = async () => {
+                if (!isScanning) return; // Durdurulduysa çık
+                
+                if (currentStudentNo > maxStudentNo) {
+                    if (active === 0) {
+                        // Tarama tamamen bitti
+                        isScanning = false;
+                        document.getElementById("btnOtoAra").style.display = 'flex';
+                        document.getElementById("btnDurdur").style.display = 'none';
+                        status.innerHTML = `<i class="fas fa-check" style="color:var(--success-color);"></i> Tarama Bitti. Toplam **${foundCount}** sonuç bulundu.`;
+                    }
+                    return;
+                }
+
+                if (active < limit) {
+                    active++;
+                    const no = currentStudentNo++;
+                    
+                    // Durum mesajını güncelle
+                    status.innerHTML = `<span class="spinner spinner-dark"></span> Taranıyor: **${no} / ${maxStudentNo}** (Aktif: ${active}/${limit} | Bulunan: **${foundCount}**)`;
+                    
+                    fetch(`${BASE_URL}/ogrenci_giris/karne_pdf/${dID}/${no}/${kKodu}`)
+                        .then(async res => {
+                            if(res.ok) {
+                                const buf = await res.arrayBuffer();
+                                const txt = await extractTextFromPdf(buf);
+                                if(txt) {
+                                    const info = parseNameAndClass(txt, no);
+                                    renderSingleStudent({...info, studentNo: no, pdfBuffer: buf});
+                                    foundCount++;
+                                }
+                            }
+                        })
+                        .catch(() => {})
+                        .finally(() => {
+                            active--;
+                            next(); // Bir sonraki sıradaki işi başlat
+                        });
+                    
+                    next(); // Mevcut paralel istek limiti dahilinde bir sonraki işi hemen başlat
+                } else {
+                    setTimeout(next, 100); // Paralel limit doluysa 100ms bekle
+                }
+            };
+            
+            next(); // Tarama döngüsünü başlat
+        }
+    </script>
+</body>
+  </html>
